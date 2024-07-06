@@ -16,7 +16,7 @@ FROM ubuntu:22.04
 # WORKDIR /home/$USERNAME/
 
 # Use Tsinghua Mirror to improve download speed.
-COPY ./sources.list /etc/apt/sources.list
+# COPY ./sources.list /etc/apt/sources.list
 # Update apt source
 RUN apt update
 # Install required packages
@@ -42,7 +42,10 @@ RUN groupadd -g $GID $GROUPNAME && \
 USER rel4-dev
 
 # Install rustup
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile=minimal
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --no-modify-path \
+    --default-toolchain nightly-2024-02-01 \
+    --component rust-src cargo clippy rust-docs rust-src rust-std rustc rustfmt \
+    --target aarch64-unknown-none-softfloat riscv64imac-unknown-none-elf
 
 # Add toolchain path to PATH environment variable
 ENV PATH="/home/rel4-dev/.cargo/bin:${PATH}:/opt/riscv/bin"
