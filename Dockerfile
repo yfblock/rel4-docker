@@ -22,7 +22,7 @@ RUN apt update
 # Install required packages
 RUN apt install -y ninja-build g++ python3-pip libxml2-utils protobuf-compiler \
     cmake device-tree-compiler python3-protobuf cpio python3-libarchive-c \
-    repo curl
+    repo curl sudo
 # Install required python modules
 RUN pip install pyyaml jinja2 ply lxml google pyfdt pyelftools pygments future jsonschema
 # Copy toolchain
@@ -49,6 +49,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y --
 
 # Add toolchain path to PATH environment variable
 ENV PATH="/home/rel4-dev/.cargo/bin:${PATH}:/opt/riscv/bin"
+
+# Install QEMU simulator
+RUN sudo apt-get install -y qemu-system-aarch64
+RUN sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 # Set working directory.
 WORKDIR /home/rel4-docker
